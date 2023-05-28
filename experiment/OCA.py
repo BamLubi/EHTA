@@ -1,14 +1,28 @@
 import numpy as np
 from env.vcs import VCS, sigmoid
 
-vcs = VCS()
+np.random.seed(2023)
+
+n_vehicle = 10
+# n_vehicle = 20
+# n_vehicle = 30
+# n_vehicle = 40
+# n_vehicle = 50
+malicious = 0
+# malicious = 0.05
+# malicious = 0.1
+# malicious = 0.15
+# malicious = 0.2
+
+
+vcs = VCS(n_vehicle, malicious)
 
 
 def get_OCA_target(vehicle_id, task_id, sensed_time) -> float:
+    r = vcs.get_reward_normal(vehicle_id, task_id, sensed_time)
     vcs.pre_sense(vehicle_id, task_id, sensed_time)
     fi, sf, tf = vcs.get_FI()
     vcs.pre_desense(vehicle_id, task_id, sensed_time)
-
     return sf
 
 

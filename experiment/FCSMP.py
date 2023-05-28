@@ -1,20 +1,35 @@
 import numpy as np
 from env.vcs import VCS, sigmoid
 
-vcs = VCS()
+np.random.seed(2023)
+
+n_vehicle = 10
+# n_vehicle = 20
+# n_vehicle = 30
+# n_vehicle = 40
+# n_vehicle = 50
+# malicious = 0
+# malicious = 0.05
+malicious = 0.1
+# malicious = 0.15
+# malicious = 0.2
+
+vcs = VCS(n_vehicle, malicious)
+
 
 def get_FCSMP_target(vehicle_id, task_id, sensed_time) -> float:
-    
+
     vcs.pre_sense(vehicle_id, task_id, sensed_time)
     new_TC = vcs.get_coverage()
     vcs.pre_desense(vehicle_id, task_id, sensed_time)
-    
-    return new_TC * 1000
+
+    return new_TC
+
 
 def ALG_FCSMP(vehicles, tasks, time_slice) -> list[int]:
     if len(tasks) == 0 or len(vehicles) == 0:
         return []
-    
+
     visit = [0] * len(tasks)
     decision = [0] * len(vehicles)
     allocated_tasks_cnt = 0
@@ -27,10 +42,10 @@ def ALG_FCSMP(vehicles, tasks, time_slice) -> list[int]:
                 if r > max_reward:
                     max_reward = r
                     sel_task = j
-        
+
         visit[sel_task] = 1
         decision[i] = tasks[sel_task]
-        
+
         allocated_tasks_cnt += 1
         if allocated_tasks_cnt >= len(tasks):
             break
@@ -40,4 +55,3 @@ def ALG_FCSMP(vehicles, tasks, time_slice) -> list[int]:
 vcs.run(ALG_FCSMP)
 
 vcs.get_stats()
-    

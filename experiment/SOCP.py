@@ -1,7 +1,20 @@
-import numpy as np
 from env.vcs import VCS, sigmoid
+import numpy as np
 
-vcs = VCS()
+np.random.seed(2023)
+
+n_vehicle = 10
+# n_vehicle = 20
+# n_vehicle = 30
+# n_vehicle = 40
+# n_vehicle = 50
+malicious = 0
+# malicious = 0.05
+# malicious = 0.1
+# malicious = 0.15
+# malicious = 0.2
+
+vcs = VCS(n_vehicle, malicious)
 
 
 def get_SOCP_target(vehicle_id, task_id, sensed_time) -> float:
@@ -9,12 +22,11 @@ def get_SOCP_target(vehicle_id, task_id, sensed_time) -> float:
     vcs.pre_sense(vehicle_id, task_id, sensed_time)
     new_TC = vcs.get_coverage()
     vcs.pre_desense(vehicle_id, task_id, sensed_time)
-    cost_2 = (1 - new_TC) * 500 * 2.5
-    cost_1 = 0.3 * new_TC * 500
-    ans = dc + cost_2 + cost_1
-    ans = dc - new_TC * 20000
-
-    return -ans
+    cost_1 = (1 - new_TC) * 0.25
+    cost_2 = new_TC * 0.3
+    ans = cost_1 + cost_2 - dc / 4000
+    ans = - (new_TC * 0.9 + dc / 4000)
+    return ans
 
 
 def ALG_SOCP(vehicles, tasks, time_slice) -> list[int]:

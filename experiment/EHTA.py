@@ -4,10 +4,15 @@ import random
 import numpy as np
 from env.vcs import VCS, sigmoid
 
-vcs = VCS()
+np.random.seed(2023)
+
+n_vehicle = 20
+
+vcs = VCS(n_vehicle, malicious=0)
+
 
 def metropolis(e, new_e, t):
-    if new_e >= e:
+    if new_e < e:
         return True
     else:
         p = math.exp((new_e - e) / t)
@@ -46,12 +51,12 @@ def ALG_EHTA(vehicles, tasks, time_slice) -> list[int]:
         return []
     all_x = []
     all_e = []
-    t = 2000
-    t_final = 10
+    t = 100
+    t_final = 1
     alpha = 0.98
     while t > t_final:
         x, e = search(all_x, all_e)
-        for i in range(100):
+        for i in range(1):
             new_x = gen_x(vehicles, tasks)
             for i in range(0, len(new_x)):
                 vcs.pre_sense(vehicles[i], new_x[i], time_slice)
@@ -66,8 +71,3 @@ def ALG_EHTA(vehicles, tasks, time_slice) -> list[int]:
         t = alpha * t
     x, e = search(all_x, all_e)
     return x
-
-
-vcs.run(ALG_EHTA)
-
-vcs.get_stats()

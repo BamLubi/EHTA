@@ -1,0 +1,2 @@
+Average max NOV: 365
+Avergae min NOV: 0.0
